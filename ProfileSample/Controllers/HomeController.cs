@@ -15,8 +15,30 @@ namespace ProfileSample.Controllers
         {
             var context = new ProfileSampleEntities();
 
-            var sources = context.ImgSources.Take(20).Select(x => x.Id);
+            var sources = context.ImgSources.Take(20).Select(x => new {Name = x.Name, Data = x.Data});
             
+            var model = new List<ImageModel>();
+
+            foreach (var item in sources)
+            {
+                var obj = new ImageModel()
+                {
+                    Name = item.Name,
+                    Data = item.Data
+                };
+
+                model.Add(obj);
+            } 
+
+            return View(model);
+        }
+
+        public ActionResult Original()
+        {
+            var context = new ProfileSampleEntities();
+
+            var sources = context.ImgSources.Take(20).Select(x => x.Id);
+
             var model = new List<ImageModel>();
 
             foreach (var id in sources)
@@ -30,9 +52,9 @@ namespace ProfileSample.Controllers
                 };
 
                 model.Add(obj);
-            } 
+            }
 
-            return View(model);
+            return View("Index", model);
         }
 
         public ActionResult Convert()
@@ -62,13 +84,6 @@ namespace ProfileSample.Controllers
             }
 
             return RedirectToAction("Index");
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
         }
     }
 }
